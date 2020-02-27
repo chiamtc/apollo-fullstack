@@ -1,0 +1,21 @@
+const {RESTDataSource} = require('apollo-datasource-rest');
+
+class LaunchAPI extends RESTDataSource {
+    constructor() {
+        super();
+        this.baseURL = 'https://api.spacexdata.com/v2/';
+    }
+
+    /*
+    The Apollo REST data sources have helper methods that correspond to HTTP verbs like GET and POST.
+    In the code above, this.get('launches'), makes a GET request to https://api.spacexdata.com/v2/launches and stores the returned launches in the response variable.
+    Then, the getAllLaunches method maps over the launches and transforms the response from our REST endpoint with this.launchReducer.
+    If there are no launches, an empty array is returned.
+     */
+    async getAllLaunches() {
+        const response = await this.get('launches');
+        return Array.isArray(response) ? response.map(launch => this.launchReducer(launch)) : [];
+    }
+}
+
+module.exports = LaunchAPI;
