@@ -34,13 +34,19 @@ const typeDefs = gql`
 
     type Mission{
         name:String,
-        missionPatch(size:PatchSize) : String
+        missionPatch(mission:String, size:PatchSize) : String
     }
 
     type TripUpdateResponse{
         success:Boolean!
         message:String
         launches:[Launch]
+    }
+    
+    type LaunchConnection{
+        cursor:String!
+        hasMore:Boolean!
+        launches:[Launch]!
     }
 
     enum PatchSize{
@@ -55,9 +61,9 @@ const typeDefs = gql`
     3. The me query will return details for the User that's currently logged in.
     """
     type Query{
-        launches:[Launch]!
+        launches(pageSize:Int, after:String):LaunchConnection!
         launch(id:ID!):Launch
-        me:User
+        me:User,
     }
 
     type Mutation{
